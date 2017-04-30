@@ -267,6 +267,35 @@ def merge_and_save(base='./Data/processed/'):
     builder.to_pickle(base + 'full.pickle')
     np.save(base+'labels.npy', labels)
 
+def merge_incremental(base='./Data/processed/'):
+    def f2n(f):
+        if re.match(r'([0-9]+)_X.csv', f):
+            return int(re.findall(r'([0-9]+)_X.csv', f)[0])
+        return None
+
+    if os.path.isfile(base + 'full.pickle'):
+        files = set(filter(lambda x: x != None, [f2n(x) for x in os.listdir(base)]))
+        labels = set(np.load(base + 'labels.npy'))
+
+        if len(files) != len(labels):
+            diff = files.difference(labels)
+            X = pd.read_pickle(base + 'full.pickle')
+            Y = np.load(base + 'labels.npy')
+
+            for d in diff:
+                print('Appending data of user %d to full.pickle' % d)
+                x = pd.read_csv(base + '%d_X.csv' % d, index_col=0)
+                y = np.load(base + '%d_Y.npy' % d)
+
+                X = pd.concat([X, x], axis=0)
+                Y = np.concatenate([Y, y])
+            X.to_pickle(base + 'full.pickle')
+            np.save(base+'labels.npy', Y)
+            print('Finished saving')
+        else:
+            print('Nothing to merge')
+    else:
+        print('full.pickle not found')
 
 if __name__ == "__main__":
     print('Executing preprocessing script...\n')

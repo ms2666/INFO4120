@@ -78,9 +78,11 @@ if __name__ == '__main__':
 
 	remote = callbacks.RemoteMonitor(root='http://localhost:9000')
 
+	print('Loading data')
 	data, labels = load_data()
 	xTr, xTe, yTr, yTe = split_data(data, labels)
 
+	print('Reshaping data')
 	xTr_conv = xTr.reshape(-1, 3, 300, 1)
 	xTe_conv = xTe.reshape(-1, 3, 300, 1)
 
@@ -93,12 +95,14 @@ if __name__ == '__main__':
 	tr_idx = np.logical_or(muk_idx_tr, fra_idx_tr)
 	te_idx = np.logical_or(muk_idx_te, fra_idx_te)
 
+	print('Converting labels to categorical')
 	yTr_tri = trinarize(yTr[tr_idx], 51, 0)
 	yTe_tri = trinarize(yTe[te_idx], 51, 0)
 
 	yTr_cat = keras.utils.to_categorical(yTr_tri, num_classes=3)
 	yTe_cat = keras.utils.to_categorical(yTe_tri, num_classes=3)
 
+	print('Compiling model')
 	model = Sequential([
         Conv2D(128, (3,50), activation='relu', input_shape=(3,300,1), padding='same'),
         Conv2D(128, (3,30), activation='relu', padding='same'),
@@ -114,6 +118,7 @@ if __name__ == '__main__':
 	sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 	model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
+	print('Training model')
 	history = model.fit(xTr_conv[tr_idx,:,:,:],
                     yTr_cat,
                     epochs=30,

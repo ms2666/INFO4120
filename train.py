@@ -32,7 +32,7 @@ def split_data(df, labels, model_dir='./Models/', test_size=0.2):
 	Split and scale data, convert to 0 indexing
 	"""
 	xTr, xTe, yTr, yTe = train_test_split(df.values, labels, test_size=test_size)
-	num_classes = labels.max()
+	num_classes = int(labels.max())
 	ss = StandardScaler()
 	xTr = ss.fit_transform(xTr)
 	xTe = ss.transform(xTe)
@@ -62,7 +62,16 @@ def random_others(labels, target_class):
                 out.append(False)
     return np.array(out)
 
-### Convert labels to categorical
+def trinarize(labels, class1, class2):
+    out = []
+    for l in labels:
+        if l == class1:
+            out.append(1)
+        elif l == class2:
+            out.append(2)
+        else:
+            out.append(0)
+    return np.array(out)
 
 if __name__ == '__main__':
 	print('Executing training script...')
@@ -75,3 +84,39 @@ if __name__ == '__main__':
 	xTr_conv = xTr.reshape(-1, 3, 300, 1)
 	xTe_conv = xTe.reshape(-1, 3, 300, 1)
 
+	muk_idx_tr = random_others(yTr, 51)
+	muk_idx_te = random_others(yTe, 51)
+
+	fra_idx_tr = random_others(yTr, 0)
+	fra_idx_te = random_others(yTe, 0)
+
+	tr_idx = np.logical_or(muk_idx_tr, fra_idx_tr)
+	te_idx = np.logical_or(muk_idx_te, fra_idx_te)
+
+	yTr_tri = trinarize(yTr[tr_idx], 51, 0)
+	yTe_tri = trinarize(yTe[te_idx], 51, 0)
+
+	yTr_cat = keras.utils.to_categorical(yTr_tri, num_classes=3)
+	yTe_cat = keras.utils.to_categorical(yTe_tri, num_classes=3)
+
+	model = Sequential([
+        Conv2D(128, (3,50), activation='relu', input_shape=(3,300,1), padding='same'),
+        Conv2D(128, (3,30), activation='relu', padding='same'),
+        Conv2D(128, (3,3), activation='relu', padding='same'),
+        MaxPooling2D(pool_size=(3,10)),
+        Flatten(),
+        Dense(512, activation='relu'),
+        Dropout(0.5),
+        Dense(512, activation='relu'),
+        Dropout(0.5),
+        Dense(3, activation='softmax')
+    ])
+	sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+	model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
+	history = model.fit(xTr_conv[tr_idx,:,:,:],
+                    yTr_cat,
+                    epochs=30,
+                    batch_size=128,
+                    validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat),
+                    callbacks=[remote])

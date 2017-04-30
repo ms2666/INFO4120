@@ -76,11 +76,9 @@ def trinarize(labels, class1, class2):
 if __name__ == '__main__':
 	print('Executing training script...')
 
-	remote = callbacks.RemoteMonitor(root='http://localhost:9000')
-
 	print('Loading data')
 	data, labels = load_data()
-	xTr, xTe, yTr, yTe = split_data(data, labels)
+	xTr, xTe, yTr, yTe = split_data(data, labels, model_dir='./Models/')
 
 	print('Reshaping data')
 	xTr_conv = xTr.reshape(-1, 3, 300, 1)
@@ -123,5 +121,6 @@ if __name__ == '__main__':
                     yTr_cat,
                     epochs=30,
                     batch_size=128,
-                    validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat),
-                    callbacks=[remote])
+                    validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat))
+
+	joblib.dump(model, './Models/net.pkl')

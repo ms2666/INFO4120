@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os, re, sys
 
+# sklearn stuff
+from sklearn.decomposition import PCA
+
 # scipy stuff
 from scipy.interpolate import interp1d
 

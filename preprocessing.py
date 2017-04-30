@@ -203,7 +203,7 @@ def preprocess_data(df, begin_idx=1000, threshold=0.25, num_merges=1):
     out = np.concatenate(out, axis=1)
     return pd.DataFrame(out, columns=columns)
 
-def preprocess_and_save(dir_name='./Data/processed/', u_dict):
+def preprocess_and_save(u_dict, dir_name='./Data/processed/'):
     s = 0
     for key in u_dict:
         s += len(u_dict[key])

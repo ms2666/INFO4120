@@ -295,7 +295,8 @@ def merge_incremental(base='./Data/processed/'):
         else:
             print('Nothing to merge')
     else:
-        print('full.pickle not found')
+        print('full.pickle not found... Building now')
+        merge_and_save(base)
 
 if __name__ == "__main__":
     print('Executing preprocessing script...\n')
@@ -307,4 +308,4 @@ if __name__ == "__main__":
     preprocess_and_save(u_dict, dir_name='./Data/processed/')
 
     # merge and save files as binary objects for quick loading
-    merge_and_save(base='./Data/processed/')
+    merge_incremental(base='./Data/processed/')

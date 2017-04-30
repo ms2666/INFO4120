@@ -248,7 +248,7 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/'):
         else:
             print('Files for user %d exist on disk.' % uid)
 
-def merge_and_save(base):
+def merge_and_save(base='./Data/processed/'):
     builder = pd.DataFrame()
     labels = []
     for f in os.listdir(base):
@@ -266,3 +266,16 @@ def merge_and_save(base):
 
     builder.to_pickle(base + 'full.pickle')
     np.save(base+'labels.npy', labels)
+
+
+if __name__ == "__main__":
+    print('Executing preprocessing script...\n')
+
+    # generate user dictionary
+    u_dict = generate_udict('./Data/')
+
+    # preprocess and save training data
+    preprocess_and_save(u_dict, dir_name='./Data/processed/')
+
+    # merge and save files as binary objects for quick loading
+    merge_and_save(base='./Data/processed/')

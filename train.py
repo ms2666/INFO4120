@@ -46,6 +46,22 @@ def split_data(df, labels, model_dir='./Models/', test_size=0.2):
 
 	return xTr, xTe, yTr, yTe
 
+def random_others(labels, target_class):
+    out = []
+    ctr = 0
+    n = (labels == target_class).sum()
+    for i in range(len(labels)):
+        if labels[i] == target_class:
+            out.append(True)
+        else:
+            p = 0.5
+            if np.random.rand() > p and ctr < n:
+                ctr += 1
+                out.append(True)
+            else:
+                out.append(False)
+    return np.array(out)
+
 ### Convert labels to categorical
 
 if __name__ == '__main__':
@@ -59,4 +75,3 @@ if __name__ == '__main__':
 	xTr_conv = xTr.reshape(-1, 3, 300, 1)
 	xTe_conv = xTe.reshape(-1, 3, 300, 1)
 
-	

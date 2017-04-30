@@ -123,4 +123,4 @@ if __name__ == '__main__':
                     batch_size=128,
                     validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat))
 
-	joblib.dump(model, './Models/net.pkl')
+	model.save('./Models/ConvNetC.h5')

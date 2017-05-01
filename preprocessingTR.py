@@ -234,7 +234,7 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', debug=False):
                 print('Processing user %d, trial %d, %d remaining' % (uid, trial, (s-ctr)))
                 try:
                     # get data from disk
-                    df = get_data(uid, trial)
+                    df = get_data(uid, trial, dir_name)
                     # proprocess data, also choose number of strides to combine
                     d = preprocess_data(df, num_merges=2)
                     # append to combined data

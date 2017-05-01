@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import os, re, sys
+import os, re, sys, time
 
 # sklearn stuff
 from sklearn.linear_model import LogisticRegression
@@ -34,7 +34,6 @@ def scale_data(df, model_dir='./Models/'):
     Scale data
     """
     xTe = df.values
-    num_classes = int(labels.max())
     ss = joblib.load(model_dir + 'ss.pkl')
     xTe = ss.transform(xTe)
 
@@ -42,33 +41,67 @@ def scale_data(df, model_dir='./Models/'):
 
 if __name__ == '__main__':
     print('Executing testing script...')
-
-    # generate user dictionary
-    u_dict = generate_udict('./Data_test/')
-
-    # preprocess and save training data
-    preprocess_and_save(u_dict, dir_name='./Data_test/processed/')
-
-    # merge and save files as binary objects for quick loading
-    merge_incremental(base='./Data_test/processed/')
-
-    # load and split data
-    data = load_data()
-    xTe = scale_data(data)
-    
-    print('Reshaping data')
-    xTe_conv = xTe.reshape(-1, 3, 300, 1)
     
     print('Loading model')
     model = keras.models.load_model('./Models/ConvNetC.h5')
     
-    preds = model.predict(xTe_conv)
+    last_run = "0"
+    last_line = "0"
     
-    user_lookup = {0: 'other', 1: 'Mukund', 2: 'Frank'}
-    
-    id_predicted = mode(preds.round().argmax(axis=1)).mode[0]
-    
-    if id_predicted == 0:
-        print('Get the fuck out of here!')
-    else:
-        print('Welcome back %s!' % user_lookup[id_predicted])
+    while True:
+        if last_line == last_run:
+            print('No new data detected')
+        else:
+            print('Running network')
+            last_run = last_line
+
+            with open('./Data_test/RUNNING', 'wb') as f:
+                pass
+            
+            ## << code in
+            t0 = time.time()
+            # generate user dictionary
+            u_dict = generate_udict('./Data_test/')
+
+            # preprocess and save training data
+            preprocess_and_save(u_dict, dir_name='./Data_test/processed/')
+
+            # merge and save files as binary objects for quick loading
+            merge_incremental(base='./Data_test/processed/')
+
+            # load and split data
+            data = load_data()
+            xTe = scale_data(data)
+
+            print('Reshaping data')
+            xTe_conv = xTe.reshape(-1, 3, 300, 1)
+
+            preds = model.predict(xTe_conv)
+
+            user_lookup = {0: 'other', 1: 'Mukund', 2: 'Frank'}
+
+            id_predicted = mode(preds.round().argmax(axis=1)).mode[0]
+
+            if id_predicted == 0:
+                print('Get the fuck out of here!')
+            else:
+                print('Welcome back %s!' % user_lookup[id_predicted])
+
+            t1 = time.time()
+
+            print('Finished testing in %.2fs' % (t1-t0))
+            ## >> code out
+            
+            # delete cache files and u000_w000_accelerometer.log
+            cache_dir = './Data_test/processed/'
+            for cachefile in os.listdir(cache_dir):
+                os.remove(cache_dir + cachefile)
+            os.remove('./Data_test/u000_w000/u000_w000_accelerometer.log')
+            os.remove('./Data_test/RUNNING')
+        
+        with open('./Data_test/TESTRUNS') as f:
+            last_line = f.readlines()[-1].rstrip()
+
+        
+        time.sleep(1)
+

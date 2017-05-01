@@ -124,3 +124,4 @@ if __name__ == '__main__':
                     validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat))
 
 	model.save('./Models/ConvNetC.h5')
+	

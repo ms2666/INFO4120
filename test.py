@@ -37,4 +37,4 @@ if __name__ == '__main__':
 	preprocess_and_save(u_dict, dir_name='./Data_test/processed/')
 
 	# merge and save files as binary objects for quick loading
-    merge_incremental(base='./Data_test/processed/')
+	merge_incremental(base='./Data_test/processed/')

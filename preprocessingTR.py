@@ -34,9 +34,9 @@ def gen_fname(uid, trial):
     f = lambda x: ('%3d' % x).replace(' ', '0')
     return 'u%s_w%s' % (f(uid), f(trial))
 
-def get_data(uid, trial):
+def get_data(uid, trial, base='./Data/processed/'):
     fname = gen_fname(uid, trial)
-    d1 = pd.read_csv('./Data/%s/%s_accelerometer.log' % (fname, fname), delimiter='\t')
+    d1 = pd.read_csv(base+'../%s/%s_accelerometer.log' % (fname, fname), delimiter='\t')
     return d1
 
 def corr(x1, x2):
@@ -206,15 +206,21 @@ def preprocess_data(df, begin_idx=1000, threshold=0.25, num_merges=1):
     out = np.concatenate(out, axis=1)
     return pd.DataFrame(out, columns=columns)
 
-def preprocess_and_save(u_dict, dir_name='./Data/processed/'):
+def preprocess_and_save(u_dict, dir_name='./Data/processed/', debug=False):
     s = 0
     for key in u_dict:
         s += len(u_dict[key])
 
     ctr = 0
     for uid in u_dict:
+        if debug:
+            print('On uid %d' % uid)
         xfname = dir_name + '%d_X.csv' % (uid)
         yfname = dir_name + '%d_Y.npy' % (uid)
+
+        if debug:
+            print('xfname: %s' % xfname)
+            print('yfname: %s' % yfname)
         
         # check if files exist
         if not (os.path.isfile(xfname) and os.path.isfile(yfname)):
@@ -252,6 +258,7 @@ def merge_and_save(base='./Data/processed/'):
     builder = pd.DataFrame()
     labels = []
     for f in os.listdir(base):
+        print(f)
         if re.match(r'[0-9]+_X.csv', f):
             uid = int(re.findall(r'([0-9]+)_X.csv', f)[0])
             print('Loading user %d' % uid)

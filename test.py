@@ -38,5 +38,3 @@ if __name__ == '__main__':
 
 	# merge and save files as binary objects for quick loading
     merge_incremental(base='./Data_test/processed/')
-
-    

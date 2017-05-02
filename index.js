@@ -7,6 +7,7 @@ const spawn = require('child_process').spawn
 const bodyParser = require('body-parser')
 const mkdirp = require('mkdirp');
 const fs = require('fs');
+const glob = require('glob');
 
 const clients = {}
 const users = {
@@ -50,7 +51,7 @@ app.post('/login/:id', (req, res) => {
   let dir = './Data_test'
   let path = 'u000_w000'
   let filename = 'u000_w000.accelerometer.log'
-  
+
   console.log('Checking if RUNNING file exists')
 
   while(fs.existsSync('./Data_test/RUNNING')) {}
@@ -160,7 +161,8 @@ function formNextFileName(training, userId, callback) {
   // leftpad with 0's
   userId = zfill3(userId)
   if (training) {
-    fs.readdir('./Data/', function(err, files) {
+    console.log('Search string: ' + './Data/u' + userId + '*')
+    glob('./Data/u' + userId + '*', function(err, files) {
       if (err) {
         callback(err)
       }

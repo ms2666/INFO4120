@@ -1,0 +1,49 @@
+html, body, .full {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+}
+
+#locked {
+  background-color: #000;
+  position: absolute;
+  z-index: 1;
+}
+
+#locked-txt, #user-name {
+  position: absolute;
+  width: 300px;
+  height: 80px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+}
+
+#locked-txt h1 {
+  font-size: 80px;
+  color: #fff;
+  margin: 0;
+}
+
+h3 {
+  color: #fff;
+  font-size: 40px;
+}
+
+h4 {
+  color: #fff;
+}
+
+#unlocked {
+  background-color: #fff;
+  position: absolute;
+  z-index: 0;
+}
+
+#invalid_login {
+  display: none;
+}

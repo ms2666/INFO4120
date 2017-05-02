@@ -1,0 +1,15 @@
+{
+  "name": "GaitKeeper",
+  "version": "0.0.1",
+  "description": "Demonstrating gait authentication",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "chokidar": "^1.6.1",
+    "express": "^4.15.2",
+    "mkdirp": "^0.5.1",
+    "socket.io": "^1.7.3"
+  },
+  "engines": {
+    "node": "5.5.0"
+  }
+}

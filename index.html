@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div id="locked" class="full">
+      <div id="locked-txt">
+        <h1>locked</h1>
+        <h3 id="client_id">Client Id: </h3>
+        <h4 id="invalid_login">User not registered in the system!</h4>
+      </div>
+    </div>
+    <div id="unlocked" class="full">
+      <h1 id="user-name">Welcome</h1>
+    </div>
+  </body>
+  <script>
+    // #client id has to be unique
+    // we will get this from the server!
+    ($(document).ready(() => {
+      // connect to the server
+      var socket = io()
+      socket.on('client_id', (id) => {
+        // Show the client id
+        $('#client_id').text('Client Id: ' + id)
+        console.log('Sending login')
+      })
+      socket.on('access', (name) => {
+        // unlock the screen
+        $('#user-name').text("Welcome back " + name + "!")
+        $('#locked').slideUp(600)
+      })
+      socket.on('no-access', () => {
+        $('#invalid_login').show()
+      })
+    }))
+  </script>
+</html>

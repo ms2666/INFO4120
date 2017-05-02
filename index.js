@@ -15,19 +15,19 @@ const users = {
   'fc249': 52
 }
 
-const script = spawn('python', ['test.py'])
+// const script = spawn('python', ['test.py'])
 
-script.stdout.on('data', (data) => {
-  console.log('stdout: ' + data)
-})
+// script.stdout.on('data', (data) => {
+//   console.log('stdout: ' + data)
+// })
 
-script.stderr.on('data', (data) => {
-  console.log('stderr: ' + data)
-})
+// script.stderr.on('data', (data) => {
+//   console.log('stderr: ' + data)
+// })
 
-script.on('close', (code) => {
-  console.log('python script exited with code ' + code)
-})
+// script.on('close', (code) => {
+//   console.log('python script exited with code ' + code)
+// })
 
 app.use(bodyParser.text({
   type: 'text/plain',
@@ -50,7 +50,7 @@ app.post('/login/:id', (req, res) => {
   // plaintext request to log in based on this
   let dir = './Data_test'
   let path = 'u000_w000'
-  let filename = 'u000_w000.accelerometer.log'
+  let filename = 'u000_w000_accelerometer.log'
 
   console.log('Checking if RUNNING file exists')
 

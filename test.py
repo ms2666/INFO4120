@@ -48,6 +48,8 @@ if __name__ == '__main__':
     t1 = time.time()
     print('Loaded model in %.2fs' % (t1 - t0))
     
+    user_lookup = {0: 'other', 1: 'Mukund', 2: 'Frank'}
+    
     while True:
         if not os.path.isfile('./Data_test/u000_w000/u000_w000_accelerometer.log'):
             print('No new data detected')
@@ -57,43 +59,44 @@ if __name__ == '__main__':
             with open('./Data_test/RUNNING', 'wb') as f:
                 pass
             
-            ## << code in
-            t0 = time.time()
-            # generate user dictionary
-            u_dict = generate_udict('./Data_test/')
+            try:
+                ## << code in
+                t0 = time.time()
+                # generate user dictionary
+                u_dict = generate_udict('./Data_test/')
 
-            # preprocess and save training data
-            preprocess_and_save(u_dict, dir_name='./Data_test/processed/')
+                # preprocess and save training data
+                preprocess_and_save(u_dict, dir_name='./Data_test/processed/')
 
-            # merge and save files as binary objects for quick loading
-            merge_incremental(base='./Data_test/processed/')
+                # merge and save files as binary objects for quick loading
+                merge_incremental(base='./Data_test/processed/')
 
-            # load and split data
-            data = load_data()
-            xTe = scale_data(data)
+                # load and split data
+                data = load_data()
+                xTe = scale_data(data)
 
-            print('Reshaping data')
-            xTe_conv = xTe.reshape(-1, 3, 300, 1)
+                print('Reshaping data')
+                xTe_conv = xTe.reshape(-1, 3, 300, 1)
 
-            preds = model.predict(xTe_conv)
+                preds = model.predict(xTe_conv)
 
-            user_lookup = {0: 'other', 1: 'Mukund', 2: 'Frank'}
+                id_predicted = mode(preds.round().argmax(axis=1)).mode[0]
 
-            id_predicted = mode(preds.round().argmax(axis=1)).mode[0]
+                t1 = time.time()
 
+                print('Finished testing in %.2fs' % (t1-t0))
+                ## >> code out
+            except:
+                id_predicted = 0
+                
             if id_predicted == 0:
                 print('Get the fuck out of here!')
             else:
                 print('Welcome back %s!' % user_lookup[id_predicted])
-
-            t1 = time.time()
-
-            print('Finished testing in %.2fs' % (t1-t0))
-            
             # save output
             with open('./Data_test/RESULT', 'w') as f:
                 f.write('%s' % user_lookup[id_predicted])
-            ## >> code out
+            
             
             # delete cache files and u000_w000_accelerometer.log
             cache_dir = './Data_test/processed/'

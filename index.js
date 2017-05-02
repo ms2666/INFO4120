@@ -16,6 +16,10 @@ const users = {
 
 const script = spawn('python', ['test.py'])
 
+script.stdout.on('data', (data) => {
+  console.log('stdout: ' + data)
+})
+
 script.stderr.on('data', (data) => {
   console.log('stderr: ' + data)
 })
@@ -34,6 +38,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login/:id', (req, res) => {
+  console.log('LOGIN ROUTE REACHED')
   // id is the client we want to connect to
   if (!(req.params.id in clients)) {
     return res.status(404).json({ message: 'Client with ID: ' + req.params.id + ' not found.'})
@@ -45,6 +50,8 @@ app.post('/login/:id', (req, res) => {
   let dir = './Data_test'
   let path = 'u000_w000'
   let filename = 'u000_w000.accelerometer.log'
+  
+  console.log('Checking if RUNNING file exists')
 
   while(fs.existsSync('./Data_test/RUNNING')) {}
 

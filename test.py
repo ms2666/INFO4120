@@ -43,17 +43,16 @@ if __name__ == '__main__':
     print('Executing testing script...')
     
     print('Loading model')
+    t0 = time.time()
     model = keras.models.load_model('./Models/ConvNetC.h5')
-    
-    last_run = "0"
-    last_line = "0"
+    t1 = time.time()
+    print('Loaded model in %.2fs' % (t1 - t0))
     
     while True:
-        if last_line == last_run:
+        if not os.path.isfile('./Data_test/u000_w000/u000_w000_accelerometer.log'):
             print('No new data detected')
         else:
             print('Running network')
-            last_run = last_line
 
             with open('./Data_test/RUNNING', 'wb') as f:
                 pass
@@ -90,6 +89,10 @@ if __name__ == '__main__':
             t1 = time.time()
 
             print('Finished testing in %.2fs' % (t1-t0))
+            
+            # save output
+            with open('./Data_test/RESULT', 'w') as f:
+                f.write('%s' % user_lookup[id_predicted])
             ## >> code out
             
             # delete cache files and u000_w000_accelerometer.log
@@ -98,10 +101,6 @@ if __name__ == '__main__':
                 os.remove(cache_dir + cachefile)
             os.remove('./Data_test/u000_w000/u000_w000_accelerometer.log')
             os.remove('./Data_test/RUNNING')
-        
-        with open('./Data_test/TESTRUNS') as f:
-            last_line = f.readlines()[-1].rstrip()
 
-        
         time.sleep(1)
 

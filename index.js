@@ -43,6 +43,10 @@ app.post('/login/:id', (req, res) => {
   while(fs.existsSync('./Data_test/RUNNING')) {}
 
   console.log("No RUNNING file detected")
+  
+  if (fs.existsSync('./Data_test/RESULT')) {
+    fs.unlinkSync('./Data_test/RESULT')
+  }
 
   writeToFile(dir, path, filename, req.body, function (err) {
     if (err) {
@@ -50,6 +54,7 @@ app.post('/login/:id', (req, res) => {
     }
     // Wait on the RESULT file
     waitOnResult(function(result) {
+      console.log("RESULT FILE FOUND")
       authenticate(result, io, id)
       fs.unlinkSync('./Data_test/RESULT')
       return res.status(200).json({ attempted: true })
@@ -64,7 +69,7 @@ app.post('/train/:id', (req, res) => {
 
   console.log(req.params.id)
   console.log(users[req.params.id])
-  formNextFileName(true, users[req.params.id].id, function (err, filename) {
+  formNextFileName(true, users[req.params.id].userId, function (err, filename) {
     let dir = './Data'
     let path = filename
     // Let's get how many files there are...

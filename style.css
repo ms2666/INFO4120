@@ -11,7 +11,7 @@ html, body, .full {
   z-index: 1;
 }
 
-#locked-txt, #user-name {
+#locked-txt, #user {
   position: absolute;
   width: 300px;
   height: 80px;
@@ -46,4 +46,23 @@ h4 {
 
 #invalid_login {
   display: none;
+}
+
+#user-pic {
+  width: 200px;
+  border-radius: 100px;
+}
+
+#user {
+  height: 280px;
+}
+
+#lock-btn {
+  float: right;
+  width: 60px;
+  height: 60px;
+}
+
+#lock-btn:hover {
+  cursor: pointer;
 }

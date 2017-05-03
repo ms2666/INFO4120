@@ -17,7 +17,11 @@
       </div>
     </div>
     <div id="unlocked" class="full">
-      <h1 id="user-name">Welcome</h1>
+      <div id="user">
+        <img id="user-pic" src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=200" />
+        <h1 id="user-name">Welcome back</h1>
+      </div>
+      <img id="lock-btn" src="http://downloadicons.net/sites/default/files/small-lock-icon-74133.png" />
     </div>
   </body>
   <script>
@@ -31,13 +35,19 @@
         $('#client_id').text('Client Id: ' + id)
         console.log('Sending login')
       })
-      socket.on('access', (name) => {
+      socket.on('access', (person) => {
         // unlock the screen
-        $('#user-name').text("Welcome back " + name + "!")
+        $('#user-name').text("Welcome back " + person.name + "!")
+        let picture = person.pic || "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=200"
+        $('#user-pic').attr("src", picture)
         $('#locked').slideUp(600)
       })
       socket.on('no-access', () => {
         $('#invalid_login').show()
+      })
+
+      $('#lock-btn').click(function() {
+        $('#locked').slideDown(600)
       })
     }))
   </script>

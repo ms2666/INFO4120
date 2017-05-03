@@ -11,23 +11,9 @@ const glob = require('glob');
 
 const clients = {}
 const users = {
-  'ms2666': 51,
-  'fc249': 52
+  'ms2666': { userId: 51, name: 'Mukund', pic: '' },
+  'fc249': { userId: 52, name: 'Frank', pic: 'https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAASHAAAAJGE4MTI5Mzk0LWJmN2QtNDE3NS1hNzIzLTFkZmM2YmQxMTM1Mg.jpg' }
 }
-
-// const script = spawn('python', ['test.py'])
-
-// script.stdout.on('data', (data) => {
-//   console.log('stdout: ' + data)
-// })
-
-// script.stderr.on('data', (data) => {
-//   console.log('stderr: ' + data)
-// })
-
-// script.on('close', (code) => {
-//   console.log('python script exited with code ' + code)
-// })
 
 app.use(bodyParser.text({
   type: 'text/plain',
@@ -78,7 +64,7 @@ app.post('/train/:id', (req, res) => {
 
   console.log(req.params.id)
   console.log(users[req.params.id])
-  formNextFileName(true, users[req.params.id], function (err, filename) {
+  formNextFileName(true, users[req.params.id].id, function (err, filename) {
     let dir = './Data'
     let path = filename
     // Let's get how many files there are...
@@ -148,7 +134,7 @@ function unregisterClient(socket, id) {
 function authenticate(person, io, id) {
   console.log("Trying to authenticate person: " + person)
   if (person !== 'other') {
-    io.to(id).emit('access', person)
+    io.to(id).emit('access', users[person] )
   } else {
     io.to(id).emit('no-access')
   }

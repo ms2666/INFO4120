@@ -206,7 +206,7 @@ def preprocess_data(df, begin_idx=1000, threshold=0.25, num_merges=1):
     out = np.concatenate(out, axis=1)
     return pd.DataFrame(out, columns=columns)
 
-def preprocess_and_save(u_dict, dir_name='./Data/processed/', debug=False):
+def preprocess_and_save(u_dict, dir_name='./Data/processed/', begin_idx=1000, debug=False):
     s = 0
     for key in u_dict:
         s += len(u_dict[key])
@@ -236,7 +236,7 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', debug=False):
                     # get data from disk
                     df = get_data(uid, trial, dir_name)
                     # proprocess data, also choose number of strides to combine
-                    d = preprocess_data(df, num_merges=2, threshold=1)
+                    d = preprocess_data(df, num_merges=2, threshold=1, begin_idx=begin_idx)
                     # append to combined data
                     data.append(d)
                     # append to combined labels

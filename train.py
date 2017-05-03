@@ -131,5 +131,6 @@ if __name__ == '__main__':
     print('Confusion Matrix:')
     print(confusion_matrix(yTe_cat.argmax(axis=1), preds.argmax(axis=1)))
     
+    print('Saving model')
     model.save('./Models/ConvNetC.h5')
     

@@ -49,6 +49,7 @@ if __name__ == '__main__':
     print('Loaded model in %.2fs' % (t1 - t0))
     
     user_lookup = {0: 'other', 1: 'Mukund', 2: 'Frank'}
+    user2netid = {0: 'other', 1:'ms2666', 2: 'fc249'}
     
     while True:
         if not os.path.isfile('./Data_test/u000_w000/u000_w000_accelerometer.log'):
@@ -95,7 +96,7 @@ if __name__ == '__main__':
                 print('Welcome back %s!' % user_lookup[id_predicted])
             # save output
             with open('./Data_test/RESULT', 'w') as f:
-                f.write('%s' % user_lookup[id_predicted])
+                f.write('%s' % user2netid[id_predicted])
             
             
             # delete cache files and u000_w000_accelerometer.log

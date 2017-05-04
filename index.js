@@ -195,6 +195,7 @@ function writeToFile(dir, path, filename, contents, callback) {
 
 function waitOnResult(callback) {
   while(!fs.existsSync('./Data_test/RESULT')) { }
+  while(fs.readFileSync('./Data_test/RESULT', 'utf-8') === '') { }
   fs.readFile('./Data_test/RESULT', function (err, data) {
     if (err) {
       console.log('Error: ' + err)

@@ -1,0 +1,20 @@
+<html>
+
+<head>
+<script language="JavaScript">
+	function refreshIt() {
+	   if (!document.images) return;
+
+	   document.images['myCam'].src = 'Data_test/results.png?' + Math.random();
+	   setTimeout('refreshIt()', 5000); // refresh every 5 secs
+	}
+</script>
+</head>
+
+<body onLoad=" setTimeout('refreshIt()',5000)">
+
+<img src="Data_test/results.png" name="myCam">
+
+</body>
+
+</html>

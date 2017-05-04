@@ -84,6 +84,17 @@ if __name__ == '__main__':
                 id_predicted = mode(preds.round().argmax(axis=1)).mode[0]
 
                 t1 = time.time()
+                
+                fig, ax = plt.subplots()
+                fig.set_figheight(8)
+                fig.set_figwidth(3)
+                ax.bar([0, 1, 2], preds.mean(axis=0))
+                ax.set_xticks([0,1,2])
+                ax.set_xticklabels(['Other', 'Mukund', 'Frank'])
+                ax.title.set_text('Softmax Probabilities')
+                fig.savefig('./Data_test/results.png')
+
+
 
                 print('Finished testing in %.2fs' % (t1-t0))
                 ## >> code out

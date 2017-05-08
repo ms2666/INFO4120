@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import os, re, sys
+import os, re, sys, time
+import multiprocessing.dummy as mp 
+import multiprocessing
 
 # sklearn stuff
 from sklearn.decomposition import PCA
@@ -212,7 +214,9 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', begin_idx=1000, de
         s += len(u_dict[key])
 
     ctr = 0
-    for uid in u_dict:
+
+    def helper(uid):
+        ctr = 0
         if debug:
             print('On uid %d' % uid)
         xfname = dir_name + '%d_X.csv' % (uid)
@@ -221,7 +225,7 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', begin_idx=1000, de
         if debug:
             print('xfname: %s' % xfname)
             print('yfname: %s' % yfname)
-        
+
         # check if files exist
         if not (os.path.isfile(xfname) and os.path.isfile(yfname)):
             # get trials for user
@@ -253,6 +257,16 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', begin_idx=1000, de
                 np.save(yfname, labels)
         else:
             print('Files for user %d exist on disk.' % uid)
+
+    for uid in u_dict:
+        helper(uid)
+    # t0 = time.time()
+    # p=mp.Pool(multiprocessing.cpu_count())
+    # p.map(helper, u_dict.keys()) # range(0,1000) if you want to replicate your example
+    # p.close()
+    # p.join()
+    # t1 = time.time()
+    # print('Finished in %.2fs' % (t1-t0))
 
 def merge_and_save(base='./Data/processed/'):
     builder = pd.DataFrame()

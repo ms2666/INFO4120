@@ -258,15 +258,15 @@ def preprocess_and_save(u_dict, dir_name='./Data/processed/', begin_idx=1000, de
         else:
             print('Files for user %d exist on disk.' % uid)
 
-    for uid in u_dict:
-        helper(uid)
-    # t0 = time.time()
-    # p=mp.Pool(multiprocessing.cpu_count())
-    # p.map(helper, u_dict.keys()) # range(0,1000) if you want to replicate your example
-    # p.close()
-    # p.join()
-    # t1 = time.time()
-    # print('Finished in %.2fs' % (t1-t0))
+    # for uid in u_dict:
+    #     helper(uid)
+    t0 = time.time()
+    p=mp.Pool(multiprocessing.cpu_count())
+    p.map(helper, u_dict.keys()) # range(0,1000) if you want to replicate your example
+    p.close()
+    p.join()
+    t1 = time.time()
+    print('Finished in %.2fs' % (t1-t0))
 
 def merge_and_save(base='./Data/processed/'):
     builder = pd.DataFrame()

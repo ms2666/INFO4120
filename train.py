@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 import os, re, sys
@@ -126,6 +128,35 @@ if __name__ == '__main__':
                     validation_data=(xTe_conv[te_idx,:,:,:], yTe_cat))
 
     preds = model.predict(xTe_conv[te_idx, :, :, :])
+
+    fig, axarr = plt.subplots(2, 1, sharex=True)
+    fig.set_figwidth(10)
+    fig.set_figheight(6)
+    
+    axarr[0].plot(history.history['loss'])
+    axarr[0].set_ylabel('Loss')
+    
+    axarr[1].plot(history.history['acc'])
+    axarr[1].set_xlabel('Epoch')
+    axarr[1].set_ylabel('Accuracy')
+
+    fig.savefig('./Data/train_results.png')
+
+    conf = confusion_matrix(yTe_cat.argmax(axis=1), preds.argmax(axis=1))
+
+    fig, ax = plt.subplots()
+    fig.suptitle('Confusion Matrix', fontsize = 20)
+    fig.subplots_adjust(top=0.8)
+    ax.matshow(conf, cmap=plt.cm.Blues)
+    ax.set_ylabel('Actual')
+    ax.set_xlabel('Predicted')
+    ax.xaxis.set_label_position('top')
+
+    for (i, j), z in np.ndenumerate(conf):
+        ax.text(j, i, '{:0.1f}'.format(z), ha='center', va='center',
+            bbox=dict(boxstyle='round', facecolor='white', edgecolor='0.3'))
+    fig.savefig('./Data/confmat.png')
+
     print('ACCURACY: %.4f' % (yTe_cat == preds.round()).mean())
     print('F1: %.4f' % f1_score(yTe_cat.argmax(axis=1), preds.argmax(axis=1), average='weighted'))
     print('Confusion Matrix:')
